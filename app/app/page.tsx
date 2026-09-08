@@ -1,22 +1,52 @@
-function Card(props: { title: string, value: string, description: string }) {
-  return (
+'use client'
+import { useState } from "react";
+import Header from "./components/Header";
+import Box from "./components/Box";
 
-    <div className="rounded-lg border p-6">
-      <h2 className="font-bold">{props.title}</h2>
-      <p className="text-2xl">{props.value}</p>
-      <span>{props.description}</span>
-    </div>
+import StatsGrid from "./components/StatsGrid";
 
-  )
-}
+const cards = [
+  {
+    id: 1,
+    title: "Active Jobs",
+    value: "21",
+    description: "There are total 21 Active Jobs are running",
+  },
+  {
+    id: 2,
+    title: "Workers",
+    value: "12",
+    description: "There are total 12 Worker",
+  },
+  {
+    id: 3,
+    title: "Queue",
+    value: "5",
+    description: "There are total 5 Jobs are in Queue",
+  },
+  {
+    id: 4,
+    title: "Failed Jobs",
+    value: "3",
+    description: "Total 3 jobs are failed",
+  }
+]
 export default function Home() {
-  return (
-    <>
-      <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Card title="Active Jobs" value="21" description="There are total 21 jobs running" />
-        <Card title="Workers" value="12" description="List of the Workers are 12" />
-      </main>
-    </>
+  const [search, setSearch] = useState("");
+  const filterCard = cards.filter((card) =>
+    card.title.toLowerCase().includes(search.toLowerCase()));
 
-  );
+  return (
+    <main>
+
+      <Box>
+        <Header />
+      </Box>
+      <input value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder=" Search for Jobs" />
+      <StatsGrid cards={filterCard} />
+
+    </main>
+  )
 }
