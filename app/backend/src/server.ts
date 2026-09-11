@@ -1,9 +1,17 @@
-import express from 'express';
 
+import express from "express"
+import router from "./routes/job.routes";
 const app = express();
-app.get("/", (req, res) => {
-    res.send("TaskMesh API IS RUNNING");
+app.use(express.json());
+app.use("/jobs", router)
+app.get("/health", (req, res) => {
+    res.json({
+        status: "ok"
+    });
 });
+app.get("/", (req, res) => {
+    res.send("IT IS RUNNING");
+})
 app.listen(3000, () => {
-    console.log("TaskMesh backend is running at 3000");
+    console.log("Project is Running");
 })
