@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { getALLjobs, createNewJob } from "../services/job.services";
-
 export const getJobs = (req: Request, res: Response) => {
     const jobdata = getALLjobs();
     res.json({
