@@ -1,0 +1,11 @@
+// use prisma-8
+
+model Job {
+  id        Uuid     @id @default(uuid())
+  name      String
+  status    String
+  priority  String
+  createdAt DateTime @default(now())
+
+  @@map("jobs")
+}

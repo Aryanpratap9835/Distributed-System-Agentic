@@ -1,40 +1,18 @@
-type Job = {
-    id: string,
-    name: string,
-    status: string
-}
+import { db } from "../db/client";
 type CreateJobInput = {
-    name: string
-}
-let jobCount = 3
-let jobs: Job[] = [
-    {
-        id: "job-1",
-        name: "Data-Processing",
-        status: "queued"
-    },
-    {
-        id: "job-2",
-        name: "Debugger",
-        status: "running",
-    }
+    name: string;
+};
+export async function createNewJob(jobdata: CreateJobInput) {
+    const newJob = await db.orm.public.Job.create({
+        name: jobdata.name,
+        status: "queued",
+        priority: "medium",
+    });
 
-]
-export const getALLjobs = (): Job[] => {
+    return newJob;
+}
+export async function getALLjobs() {
+    const jobs = await db.orm.public.Job.all();
 
     return jobs;
-};
-export const createNewJob = (jobdata: CreateJobInput): Job => {
-    console.log(jobdata);
-
-    const newJob = {
-        id: `job-${jobCount}`,
-        name: jobdata.name,
-        status: "queued"
-    }
-    jobCount++;
-
-
-    jobs.push(newJob)
-    return newJob;
 }
