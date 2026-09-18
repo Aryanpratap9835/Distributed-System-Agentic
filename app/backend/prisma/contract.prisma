@@ -1,11 +1,12 @@
 // use prisma-8
 
 model Job {
-  id        Uuid     @id @default(uuid())
-  name      String
-  status    String
-  priority  String
-  createdAt DateTime @default(now())
+  id         Uuid     @id @default(uuid())
+  name       String
+  status     String
+  priority   String
+  retryCount Int      @default(0)
+  createdAt  DateTime @default(now())
 
   @@map("jobs")
-}
+}
