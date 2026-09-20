@@ -10,3 +10,12 @@ model Job {
 
   @@map("jobs")
 }
+model worker{
+  id             Uuid @id @default(uuid())
+  name           String
+  status         String
+  lastHeartbeat  DateTime
+  createdAt      DateTime @default(now())
+
+  @@map("workers")
+}

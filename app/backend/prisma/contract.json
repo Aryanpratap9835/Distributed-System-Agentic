@@ -7,6 +7,10 @@
     "jobs": {
       "model": "Job",
       "namespace": "public"
+    },
+    "workers": {
+      "model": "worker",
+      "namespace": "public"
     }
   },
   "domain": {
@@ -83,6 +87,67 @@
               "namespaceId": "public",
               "table": "jobs"
             }
+          },
+          "worker": {
+            "fields": {
+              "createdAt": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
+              },
+              "lastHeartbeat": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "status": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "createdAt": {
+                  "column": "createdAt"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "lastHeartbeat": {
+                  "column": "lastHeartbeat"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "status": {
+                  "column": "status"
+                }
+              },
+              "namespaceId": "public",
+              "table": "workers"
+            }
           }
         }
       }
@@ -142,6 +207,47 @@
                 ]
               },
               "uniques": []
+            },
+            "workers": {
+              "columns": {
+                "createdAt": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "default": {
+                    "expression": "now()",
+                    "kind": "function"
+                  },
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/uuid@1",
+                  "nativeType": "uuid",
+                  "nullable": false
+                },
+                "lastHeartbeat": {
+                  "codecId": "pg/timestamptz-temporal@1",
+                  "nativeType": "timestamptz",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "status": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": []
             }
           }
         },
@@ -149,10 +255,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "79c9015507c00c3bdaf2c7503f6c09e43a0b4a3c24b05fb649fb0c4b6d634eb6"
+    "storageHash": "3bb4540f2d994c33e35872d52d31669048daa17428115b0f5b0fe39e56ad63c0"
   },
   "execution": {
-    "executionHash": "8a0d53fc3a00a6163bc387cfe64939825fb1c96aeb62244bfff521d7ced765b8",
+    "executionHash": "22421469976de487ce342f6136aa29a4702046a77c711fdbf013f569ee5b89a8",
     "mutations": {
       "defaults": [
         {
@@ -164,6 +270,17 @@
             "column": "id",
             "namespace": "public",
             "table": "jobs"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "workers"
           }
         }
       ]
