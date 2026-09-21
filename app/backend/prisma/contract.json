@@ -60,6 +60,13 @@
                   "codecId": "pg/text@1",
                   "kind": "scalar"
                 }
+              },
+              "workerId": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/uuid@1",
+                  "kind": "scalar"
+                }
               }
             },
             "relations": {},
@@ -82,6 +89,9 @@
                 },
                 "status": {
                   "column": "status"
+                },
+                "workerId": {
+                  "column": "workerId"
                 }
               },
               "namespaceId": "public",
@@ -197,6 +207,11 @@
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
+                },
+                "workerId": {
+                  "codecId": "pg/uuid@1",
+                  "nativeType": "uuid",
+                  "nullable": true
                 }
               },
               "foreignKeys": [],
@@ -255,7 +270,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "3bb4540f2d994c33e35872d52d31669048daa17428115b0f5b0fe39e56ad63c0"
+    "storageHash": "90ee779d24243e960d2894c949352d9c626fdad2f88861f587860d6439c41fab"
   },
   "execution": {
     "executionHash": "22421469976de487ce342f6136aa29a4702046a77c711fdbf013f569ee5b89a8",

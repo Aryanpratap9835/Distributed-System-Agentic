@@ -5,7 +5,7 @@ import { Temporal } from "temporal-polyfill";
 const MAX_RETRIES = 3;
 async function registerWorker() {
     const worker = await db.orm.public.worker.create({
-        name: "worker-1",
+        name: `worker-${process.pid}`,
         status: "healthy",
         lastHeartbeat: Temporal.Now.instant()
 
@@ -55,7 +55,8 @@ async function worker() {
                 status: "queued"
             })
             .update({
-                status: "running"
+                status: "running",
+                workerId: workerData.id
             });
 
         console.log("CLAIM RESULT:", result);
@@ -71,7 +72,7 @@ async function worker() {
 
         try {
             // 4. Process the job
-            await setTimeout(3000);
+            await setTimeout(30000);
 
             // Temporary failure test:
             // throw new Error("Job processing failed");

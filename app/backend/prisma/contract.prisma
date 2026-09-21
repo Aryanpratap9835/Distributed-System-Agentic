@@ -6,6 +6,7 @@ model Job {
   status     String
   priority   String
   retryCount Int      @default(0)
+  workerId   Uuid?
   createdAt  DateTime @default(now())
 
   @@map("jobs")
