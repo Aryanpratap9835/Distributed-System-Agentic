@@ -33,7 +33,8 @@ async function worker() {
         // 1. Find a queued job
         const jobs = await db.orm.public.Job
             .where({
-                status: "queued"
+                status: "assigned",
+                workerId: workerData.id
             })
             .all();
         const job = jobs[0];
@@ -52,11 +53,11 @@ async function worker() {
         const result = await db.orm.public.Job
             .where({
                 id: job.id,
-                status: "queued"
+                status: "assigned",
+                workerId: workerData.id
             })
             .update({
-                status: "running",
-                workerId: workerData.id
+                status: "running"
             });
 
         console.log("CLAIM RESULT:", result);
