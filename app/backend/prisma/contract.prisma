@@ -1,22 +1,44 @@
 // use prisma-8
 
 model Job {
-  id         Uuid     @id @default(uuid())
-  name       String
-  status     String
-  priority   String
-  retryCount Int      @default(0)
-  workerId   Uuid?
-  createdAt  DateTime @default(now())
+  id          Uuid      @id @default(uuid())
+  name        String
+  status      String
+  priority    String
+  retryCount  Int       @default(0)
+  workerId    Uuid?
+  payload     String?
+  result      String?
+  error       String?
+  startedAt   DateTime?
+  completedAt DateTime?
+  durationMs  Int?
+  workflowId  Uuid?
+  createdAt   DateTime  @default(now())
 
   @@map("jobs")
 }
-model worker{
-  id             Uuid @id @default(uuid())
-  name           String
-  status         String
-  lastHeartbeat  DateTime
-  createdAt      DateTime @default(now())
+
+model worker {
+  id            Uuid     @id @default(uuid())
+  name          String
+  status        String
+  currentJobId  Uuid?
+  jobsProcessed Int      @default(0)
+  uptimeSeconds Int      @default(0)
+  lastHeartbeat DateTime
+  createdAt     DateTime @default(now())
 
   @@map("workers")
 }
+
+model Workflow {
+  id             Uuid     @id @default(uuid())
+  name           String
+  status         String
+  definitionJson String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @default(now())
+
+  @@map("workflows")
+}

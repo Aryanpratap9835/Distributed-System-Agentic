@@ -28,17 +28,28 @@ export const createJob = async (
     next: NextFunction
 ) => {
     try {
+        console.log("1. createJob called");
+        console.log("BODY:", req.body);
+
         const jobs = await createNewJob(req.body);
+
+        console.log("2. Job created:", jobs);
 
         res.status(201).json({
             message: "job Created",
             jobs
         });
     } catch (error) {
-        next(error);
+        console.error("CREATE JOB ERROR:", error);
+
+        res.status(500).json({
+            message: "Create job failed",
+            error: error instanceof Error
+                ? error.message
+                : String(error)
+        });
     }
 };
-
 export const retryJob = async (
     req: Request<{ id: string }>,
     res: Response,

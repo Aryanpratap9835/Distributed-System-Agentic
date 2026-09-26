@@ -1,6 +1,6 @@
-
 import { db } from "../db/client";
-import { jobQueue } from "../queue/queue";
+import { enqueueJob } from "../queue/redisQueue";
+import { publishEvent } from "../events/eventsPublisher";
 
 type CreateJobInput = {
     name: string;
@@ -11,24 +11,29 @@ export async function createNewJob(jobdata: CreateJobInput) {
         name: jobdata.name,
         status: "queued",
         priority: "medium",
+        retryCount: 0,
+        workerId: null,
     });
 
-    jobQueue.enqueue(newJob);
+    // Put job into the real execution queue
+    await enqueueJob(newJob.id);
+
+    await publishEvent("job-created", {
+        jobId: newJob.id,
+        name: newJob.name,
+        status: newJob.status,
+    });
 
     return newJob;
 }
 
 export async function getALLjobs() {
-    const jobs = await db.orm.public.Job.all();
-
-    return jobs;
+    return await db.orm.public.Job.all();
 }
 
 export async function retryJobService(id: string) {
     const jobs = await db.orm.public.Job
-        .where({
-            id: id
-        })
+        .where({ id })
         .all();
 
     const job = jobs[0];
@@ -38,18 +43,41 @@ export async function retryJobService(id: string) {
     }
 
     if (job.status !== "dead_letter") {
-        throw new Error("Only dead letter jobs can be retried");
+        throw new Error(
+            "Only dead letter jobs can be manually retried"
+        );
     }
 
+    /*
+     * Reset the job first.
+     */
     const updatedJob = await db.orm.public.Job
         .where({
-            id: id
+            id,
+            status: "dead_letter",
         })
         .update({
             status: "queued",
-            retryCount: 0
+            retryCount: 0,
+            workerId: null,
         });
+
+    if (!updatedJob) {
+        throw new Error(
+            "Job could not be moved back to queue"
+        );
+    }
+
+    /*
+     * Put it back into the real execution queue.
+     */
+    await enqueueJob(id);
+
+    await publishEvent("job-retried", {
+        jobId: id,
+        retryCount: 0,
+        status: "queued",
+    });
 
     return updatedJob;
 }
-
